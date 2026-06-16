@@ -16,7 +16,7 @@ export function withDates<T extends Record<string, unknown>>(
   for (const field of dateFields) {
     if (result[field]) {
       (result as Record<string, unknown>)[field as string] = toDate(
-        result[field] as Timestamp | Date
+        result[field] as unknown as Timestamp | Date
       );
     }
   }
