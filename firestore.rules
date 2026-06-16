@@ -1,0 +1,108 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isAuth() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // ── Users ──────────────────────────────────────────
+    match /users/{userId} {
+      allow read:   if isOwner(userId) || isAdmin();
+      allow create: if isAuth() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── Products (public read) ─────────────────────────
+    match /products/{id} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    match /productVariants/{id} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Categories & Brands (public read) ─────────────
+    match /categories/{id} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    match /brands/{id} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Orders ────────────────────────────────────────
+    match /orders/{orderId} {
+      // Guest or owner can read; admin can read all
+      allow read: if isAdmin()
+                  || (isAuth() && resource.data.userId == request.auth.uid);
+      // Anyone can create (guest checkout)
+      allow create: if true;
+      // Owner can cancel; admin can update status
+      allow update: if isAdmin()
+                  || (isOwner(resource.data.userId)
+                      && request.resource.data.status == 'cancelled');
+      allow delete: if isAdmin();
+    }
+
+    // ── Reviews ───────────────────────────────────────
+    match /reviews/{id} {
+      allow read:   if resource.data.isApproved == true || isAdmin();
+      allow create: if isAuth();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── Banners & Flash Sales (public read) ───────────
+    match /banners/{id} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    match /flashSales/{id} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Coupons (auth read) ───────────────────────────
+    match /coupons/{id} {
+      allow read:  if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // ── Settings (public read) ────────────────────────
+    match /settings/{doc} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Notifications ─────────────────────────────────
+    match /notifications/{id} {
+      allow read:   if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isAdmin();
+      allow update: if isOwner(resource.data.userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── Admins (admin only) ───────────────────────────
+    match /admins/{id} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
