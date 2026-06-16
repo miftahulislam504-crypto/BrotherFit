@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 
 export interface ColorOption {
@@ -12,29 +14,6 @@ interface ColorSelectorProps {
   onSelect: (color: string) => void;
 }
 
-// Fallback color map for common color names
-const COLOR_MAP: Record<string, string> = {
-  black:  '#1A1A1A',
-  white:  '#F5F5F5',
-  brown:  '#8B5E3C',
-  beige:  '#D4C5B0',
-  navy:   '#1B2A4A',
-  red:    '#DC2626',
-  green:  '#16A34A',
-  blue:   '#2563EB',
-  gray:   '#9CA3AF',
-  grey:   '#9CA3AF',
-  pink:   '#EC4899',
-  camel:  '#C89B6D',
-  cream:  '#F5F0E8',
-  khaki:  '#BDB76B',
-};
-
-function resolveColor(color: ColorOption): string {
-  if (color.hex) return color.hex;
-  return COLOR_MAP[color.name.toLowerCase()] ?? '#9A8C82';
-}
-
 export default function ColorSelector({
   colors,
   availableColors,
@@ -44,42 +23,59 @@ export default function ColorSelector({
   return (
     <div>
       <p className="text-sm font-medium text-text mb-3">
-        Select Color
-        {selected && (
-          <span className="text-muted font-normal ml-2">: {selected}</span>
-        )}
+        Select Color{selected ? (
+          <span className="font-normal text-muted"> : {selected}</span>
+        ) : null}
       </p>
-      <div className="flex flex-wrap gap-3">
-        {colors.map(color => {
-          const available = availableColors.includes(color.name);
-          const isSelected = selected === color.name;
-          const hex = resolveColor(color);
+
+      <div className="flex flex-wrap gap-2.5">
+        {colors.map(({ name, hex }) => {
+          const available = availableColors.includes(name);
+          const isSelected = selected === name;
+          const bg = hex ?? '#cccccc';
 
           return (
             <button
-              key={color.name}
-              onClick={() => available && onSelect(color.name)}
+              key={name}
+              onClick={() => available && onSelect(name)}
               disabled={!available}
-              title={color.name}
+              title={name}
               className={cn(
-                'relative w-9 h-9 rounded-full transition-all duration-200',
+                'relative w-8 h-8 rounded-full transition-all duration-200',
+                'border-2',
                 isSelected
-                  ? 'ring-2 ring-offset-2 ring-primary'
+                  ? 'border-primary scale-110 shadow-md'
                   : available
-                  ? 'hover:ring-2 hover:ring-offset-2 hover:ring-border'
-                  : 'opacity-30 cursor-not-allowed'
+                  ? 'border-border/60 hover:border-primary/60 hover:scale-105'
+                  : 'border-border/30 opacity-40 cursor-not-allowed'
               )}
-              style={{ backgroundColor: hex }}
+              style={{ backgroundColor: bg }}
+              aria-label={`${name}${!available ? ' (out of stock)' : ''}`}
             >
-              {/* White swatch needs border */}
-              {(color.name.toLowerCase() === 'white' ||
-                color.name.toLowerCase() === 'cream') && (
-                <span className="absolute inset-0 rounded-full border border-border" />
+              {/* Selected tick */}
+              {isSelected && (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M2 6l3 3 5-5"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               )}
-              {/* Out of stock diagonal */}
+
+              {/* Strikethrough for out-of-stock */}
               {!available && (
-                <span className="absolute inset-0 rounded-full overflow-hidden">
-                  <span className="absolute w-full h-px bg-white/60 rotate-45 top-1/2" />
+                <span
+                  className="absolute inset-0 rounded-full overflow-hidden pointer-events-none"
+                  aria-hidden
+                >
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <span className="w-full h-px bg-black/30 rotate-45 block" />
+                  </span>
                 </span>
               )}
             </button>

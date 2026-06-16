@@ -28,7 +28,8 @@ function pad(n: number) {
 
 export default function CountdownTimer({ endTime, onExpire }: CountdownTimerProps) {
   const [time, setTime] = useState<TimeLeft>(getTimeLeft(endTime));
-  const expired = time.hours === 0 && time.minutes === 0 && time.seconds === 0;
+  const expired =
+    time.hours === 0 && time.minutes === 0 && time.seconds === 0;
 
   useEffect(() => {
     if (expired) { onExpire?.(); return; }
@@ -45,19 +46,6 @@ export default function CountdownTimer({ endTime, onExpire }: CountdownTimerProp
     return () => clearInterval(id);
   }, [endTime, expired, onExpire]);
 
-  const Segment = ({ value }: { value: number }) => (
-    <div
-      className="min-w-[30px] h-8 flex items-center justify-center
-                 bg-primary text-white text-sm font-mono font-medium rounded-lg"
-    >
-      {pad(value)}
-    </div>
-  );
-
-  const Colon = () => (
-    <span className="text-primary font-bold text-sm mx-0.5">:</span>
-  );
-
   return (
     <div className="flex items-center gap-0.5">
       <Segment value={time.hours} />
@@ -66,5 +54,25 @@ export default function CountdownTimer({ endTime, onExpire }: CountdownTimerProp
       <Colon />
       <Segment value={time.seconds} />
     </div>
+  );
+}
+
+function Segment({ value }: { value: number }) {
+  return (
+    <div
+      className="w-[26px] h-[26px] flex items-center justify-center
+                 bg-primary text-white text-[11px] font-mono font-semibold
+                 rounded-md leading-none"
+    >
+      {pad(value)}
+    </div>
+  );
+}
+
+function Colon() {
+  return (
+    <span className="text-primary font-bold text-xs leading-none px-px">
+      :
+    </span>
   );
 }

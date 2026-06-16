@@ -23,8 +23,14 @@ export default function ProductCard({ product, compact = false }: ProductCardPro
     : 0;
 
   return (
-    <div className={cn('product-card', compact ? 'w-36' : 'w-full')}>
-      {/* Image */}
+    <div
+      className={cn(
+        'group flex flex-col bg-surface rounded-2xl overflow-hidden',
+        'border border-border/40 shadow-sm hover:shadow-md transition-shadow duration-300',
+        compact ? 'w-36' : 'w-full'
+      )}
+    >
+      {/* ── Image block ──────────────────────────────── */}
       <Link href={`/product/${product.slug}`} className="block relative">
         <div
           className={cn(
@@ -37,57 +43,87 @@ export default function ProductCard({ product, compact = false }: ProductCardPro
               src={product.images[0]}
               alt={product.name}
               fill
-              className="object-cover hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 390px) 50vw, 200px"
             />
           ) : (
-            <div className="w-full h-full bg-border" />
+            /* Placeholder shimmer */
+            <div className="w-full h-full bg-border/50 animate-pulse" />
           )}
         </div>
 
-        {/* Discount badge */}
+        {/* Discount badge — top-left */}
         {hasDiscount && (
-          <span className="absolute top-2 left-2 badge-sale">
+          <span
+            className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full
+                       bg-primary text-white text-[10px] font-semibold tracking-wide"
+          >
             -{discount}%
           </span>
         )}
       </Link>
 
-      {/* Info */}
-      <div className="p-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] text-muted mb-0.5 truncate">
-              {product.tags[0] ?? 'New'}
-            </p>
-            <Link href={`/product/${product.slug}`}>
-              <h3 className="text-sm font-medium text-text clamp-2 leading-snug hover:text-primary transition-colors">
-                {product.name}
-              </h3>
-            </Link>
-          </div>
+      {/* ── Info block ───────────────────────────────── */}
+      <div className="flex flex-col flex-1 px-3 pt-2.5 pb-3 gap-1">
 
-          {/* Wishlist */}
+        {/* Tag / category label */}
+        <p className="text-[10px] text-muted uppercase tracking-wider font-medium truncate">
+          {product.tags[0] ?? 'New Arrival'}
+        </p>
+
+        {/* Name row — name + wishlist heart */}
+        <div className="flex items-start justify-between gap-1.5">
+          <Link href={`/product/${product.slug}`} className="flex-1 min-w-0">
+            <h3
+              className={cn(
+                'font-medium text-text leading-snug hover:text-primary transition-colors',
+                compact ? 'text-xs clamp-2' : 'text-sm clamp-2'
+              )}
+            >
+              {product.name}
+            </h3>
+          </Link>
+
+          {/* Wishlist heart */}
           <button
-            onClick={() => toggle(product.id)}
+            onClick={(e) => {
+              e.preventDefault();
+              toggle(product.id);
+            }}
             className="flex-shrink-0 w-7 h-7 flex items-center justify-center
-                       rounded-full hover:bg-border/60 transition-colors"
+                       rounded-full bg-bg/80 border border-border/60
+                       hover:border-primary/60 transition-all duration-200 mt-0.5"
             aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           >
             <Heart
-              size={16}
+              size={14}
               className={cn(
-                'transition-colors',
+                'transition-all duration-200',
                 isWishlisted
-                  ? 'fill-primary stroke-primary'
+                  ? 'fill-primary stroke-primary scale-110'
                   : 'stroke-muted'
               )}
             />
           </button>
         </div>
 
-        {/* Price */}
-        <div className="flex items-center gap-2 mt-2">
+        {/* Rating — if available */}
+        {product.rating && (
+          <div className="flex items-center gap-1">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="#C89B6D">
+              <path d="M6 1l1.27 2.58L10 4.02l-2 1.95.47 2.75L6 7.38 3.53 8.72 4 5.97 2 4.02l2.73-.44L6 1z" />
+            </svg>
+            <span className="text-[10px] font-medium text-muted">
+              {product.rating.toFixed(1)}
+              {product.reviewCount ? (
+                <span className="text-muted/70"> ({product.reviewCount})</span>
+              ) : null}
+            </span>
+          </div>
+        )}
+
+        {/* Price row — pushed to bottom */}
+        <div className="flex items-center gap-2 mt-auto pt-1.5">
           <span className="text-sm font-semibold font-mono text-primary">
             {formatPrice(price)}
           </span>
@@ -97,6 +133,7 @@ export default function ProductCard({ product, compact = false }: ProductCardPro
             </span>
           )}
         </div>
+
       </div>
     </div>
   );

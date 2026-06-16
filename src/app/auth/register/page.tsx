@@ -44,7 +44,7 @@ export default function RegisterPage() {
   return (
     <div className="animate-fade-in">
       <h1 className="font-serif text-3xl text-primary text-center mb-1">Create account</h1>
-      <p className="text-sm text-muted text-center mb-8">Join FashionOS today</p>
+      <p className="text-sm text-muted text-center mb-8">Join BrotherFit today</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <Input

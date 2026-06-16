@@ -41,7 +41,7 @@ const config: Config = {
         sticky: '0 -2px 16px rgba(0,0,0,0.06)',
       },
       height: {
-        header: '56px',
+        header: '100px',
         'bottom-nav': '64px',
       },
       screens: {

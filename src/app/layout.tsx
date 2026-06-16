@@ -26,13 +26,13 @@ const dmMono = DM_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'FashionOS',
-    template: '%s | FashionOS',
+    default: 'BrotherFit',
+    template: '%s | BrotherFit',
   },
-  description: 'Premium fashion for everyone.',
+  description: 'BrotherFit — Premium Fashion Brand.',
   openGraph: {
     type: 'website',
-    siteName: 'FashionOS',
+    siteName: 'BrotherFit',
   },
 };
 

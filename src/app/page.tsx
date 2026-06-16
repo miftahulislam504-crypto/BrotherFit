@@ -16,8 +16,8 @@ import {
 } from '@/services/productService';
 
 export const metadata: Metadata = {
-  title: 'FashionOS — Premium Fashion',
-  description: 'Shop the latest collection of premium fashion.',
+  title: 'BrotherFit — Premium Fashion Brand',
+  description: 'Shop the latest premium fashion from BrotherFit.',
 };
 
 export const revalidate = 60;
