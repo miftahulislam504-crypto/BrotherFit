@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import type { Metadata } from 'next';
+import { Suspense, useState } from 'react';
 import SiteLayout from '@/components/layout/SiteLayout';
 import CartItem from '@/components/cart/CartItem';
 import CartSummary from '@/components/cart/CartSummary';
@@ -9,7 +8,7 @@ import CouponInput from '@/components/cart/CouponInput';
 import EmptyCart from '@/components/cart/EmptyCart';
 import { useCartStore } from '@/store/cartStore';
 
-export default function CartPage() {
+function CartContent() {
   const items      = useCartStore(s => s.items);
   const totalPrice = useCartStore(s => s.totalPrice());
   const totalItems = useCartStore(s => s.totalItems());
@@ -18,7 +17,7 @@ export default function CartPage() {
   const [appliedCode,     setAppliedCode]     = useState('');
   const [appliedCouponId, setAppliedCouponId] = useState('');
 
-  const deliveryCharge = 0; // Set after address is entered in checkout
+  const deliveryCharge = 0;
   const total = Math.max(0, totalPrice - discount + deliveryCharge);
 
   const handleApplyCoupon = (d: number, code: string, couponId: string) => {
@@ -34,52 +33,55 @@ export default function CartPage() {
   };
 
   if (!items.length) {
-    return (
-      <SiteLayout>
-        <EmptyCart />
-      </SiteLayout>
-    );
+    return <EmptyCart />;
   }
 
   return (
-    <SiteLayout>
-      <div className="mt-4">
-        <h1 className="font-serif text-2xl text-primary mb-4">
-          Cart
-          <span className="text-muted font-sans text-base font-normal ml-2">
-            ({totalItems} item{totalItems !== 1 ? 's' : ''})
-          </span>
-        </h1>
+    <div className="mt-4">
+      <h1 className="font-serif text-2xl text-primary mb-4">
+        Cart
+        <span className="text-muted font-sans text-base font-normal ml-2">
+          ({totalItems} item{totalItems !== 1 ? 's' : ''})
+        </span>
+      </h1>
 
-        {/* Cart items */}
-        <div className="card p-4 mb-4">
-          {items.map(item => (
-            <CartItem key={item.variantId} item={item} />
-          ))}
-        </div>
-
-        {/* Coupon */}
-        <div className="mb-4">
-          <CouponInput
-            subtotal={totalPrice}
-            onApply={handleApplyCoupon}
-            onRemove={handleRemoveCoupon}
-            appliedCode={appliedCode}
-          />
-        </div>
-
-        {/* Order summary */}
-        <CartSummary
-          subtotal={totalPrice}
-          deliveryCharge={deliveryCharge}
-          discount={discount}
-          total={total}
-          itemCount={totalItems}
-        />
-
-        {/* Bottom spacer */}
-        <div className="h-4" />
+      {/* Cart items */}
+      <div className="card p-4 mb-4">
+        {items.map(item => (
+          <CartItem key={item.variantId} item={item} />
+        ))}
       </div>
-    </SiteLayout>
+
+      {/* Coupon */}
+      <div className="mb-4">
+        <CouponInput
+          subtotal={totalPrice}
+          onApply={handleApplyCoupon}
+          onRemove={handleRemoveCoupon}
+          appliedCode={appliedCode}
+        />
+      </div>
+
+      {/* Order summary */}
+      <CartSummary
+        subtotal={totalPrice}
+        deliveryCharge={deliveryCharge}
+        discount={discount}
+        total={total}
+        itemCount={totalItems}
+      />
+
+      <div className="h-4" />
+    </div>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <SiteLayout>
+        <CartContent />
+      </SiteLayout>
+    </Suspense>
   );
 }
