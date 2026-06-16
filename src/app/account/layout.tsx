@@ -40,7 +40,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   return (
     <AuthGuard>
       <SiteLayout>
-        <div className="mt-4">
+        <div className="mt-4 pb-safe">
 
           {/* User greeting */}
           <div className="flex items-center justify-between mb-5">

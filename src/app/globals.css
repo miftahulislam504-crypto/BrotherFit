@@ -16,15 +16,15 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    overflow-x: hidden; /* ← horizontal zoom fix */
+    /* NOTE: overflow-x hidden on html/body can block vertical scroll on mobile.
+       Horizontal overflow is handled at container level instead. */
   }
 
   body {
     @apply bg-bg text-text;
     font-family: var(--font-dm-sans), system-ui, sans-serif;
     min-height: 100dvh;
-    overscroll-behavior-y: none;
-    overflow-x: hidden; /* ← horizontal zoom fix */
+    overflow-x: clip; /* clip doesn't create a scroll container, so vertical scroll works */
   }
 
   h1, h2, h3, h4, h5 {

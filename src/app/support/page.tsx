@@ -45,7 +45,7 @@ export default function SupportPage() {
 
   return (
     <SiteLayout>
-      <div className="mt-4 pb-8">
+      <div className="mt-4 pb-10">
 
         {/* Header */}
         <div className="text-center py-6 mb-2">
