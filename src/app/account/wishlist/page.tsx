@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, ShoppingBag, Trash2 } from 'lucide-react';
-import SiteLayout from '@/components/layout/SiteLayout';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useCartStore } from '@/store/cartStore';
 import { getProductById } from '@/services/productService';
@@ -50,50 +49,45 @@ export default function WishlistPage() {
   };
 
   return (
-    <SiteLayout>
-      <div className="mt-4 pb-6">
+    <div className="pb-6">
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="font-serif text-2xl text-primary">Wishlist</h1>
-          {products.length > 0 && (
+      {/* Loading */}
+      {loading && (
+        <div className="grid grid-cols-2 gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="aspect-[3/4] rounded-2xl" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!loading && !ids.length && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-20 h-20 rounded-full bg-border/50 flex items-center justify-center mb-4">
+            <Heart size={32} className="text-muted" />
+          </div>
+          <h2 className="font-serif text-xl text-primary">Nothing saved yet</h2>
+          <p className="text-sm text-muted mt-2 max-w-xs">
+            Tap the heart on any product to save it here.
+          </p>
+          <Link href="/products" className="btn-primary mt-6">
+            Browse Products
+          </Link>
+        </div>
+      )}
+
+      {/* Grid */}
+      {!loading && products.length > 0 && (
+        <>
+          <div className="flex items-center justify-between mb-4">
             <span className="text-xs text-muted">
               {products.length} item{products.length !== 1 ? 's' : ''}
             </span>
-          )}
-        </div>
-
-        {/* Loading */}
-        {loading && (
-          <div className="grid grid-cols-2 gap-3">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="aspect-[3/4] rounded-2xl" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
-              </div>
-            ))}
           </div>
-        )}
-
-        {/* Empty state */}
-        {!loading && !ids.length && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-20 h-20 rounded-full bg-border/50 flex items-center justify-center mb-4">
-              <Heart size={32} className="text-muted" />
-            </div>
-            <h2 className="font-serif text-xl text-primary">Nothing saved yet</h2>
-            <p className="text-sm text-muted mt-2 max-w-xs">
-              Tap the heart on any product to save it here.
-            </p>
-            <Link href="/products" className="btn-primary mt-6">
-              Browse Products
-            </Link>
-          </div>
-        )}
-
-        {/* Grid */}
-        {!loading && products.length > 0 && (
           <div className="grid grid-cols-2 gap-3">
             {products.map(product => (
               <WishlistCard
@@ -104,10 +98,10 @@ export default function WishlistPage() {
               />
             ))}
           </div>
-        )}
+        </>
+      )}
 
-      </div>
-    </SiteLayout>
+    </div>
   );
 }
 
