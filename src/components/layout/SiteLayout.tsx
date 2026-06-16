@@ -27,11 +27,10 @@ export default function SiteLayout({
       </Suspense>
 
       <main
-        className="flex-1 container-app overflow-y-auto"
+        className="flex-1 container-app"
         style={{
           paddingTop: 'var(--header-height)',
-          paddingBottom: 'calc(var(--bottom-nav-height) + 8px)',
-          minHeight: '100dvh',
+          paddingBottom: 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px)',
         }}
       >
         {children}
