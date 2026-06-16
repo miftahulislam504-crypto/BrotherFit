@@ -4,7 +4,7 @@ Premium fashion e-commerce — Next.js 15 + Firebase.
 
 ## Stack
 
-| Layer     | Tech                                  |
+| Layer     | Tech                                |
 |-----------|---------------------------------------|
 | Framework | Next.js 15 (App Router, TypeScript)   |
 | Styling   | Tailwind CSS                          |
