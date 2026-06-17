@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans, DM_Mono } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import PWARegister from '@/components/pwa/PWARegister';
 import InstallBanner from '@/components/pwa/InstallBanner';
+import { APP_URL } from '@/lib/constants';
 import './globals.css';
 
 const cormorant = Cormorant_Garamond({
@@ -36,12 +37,29 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   title: {
-    default: 'BrotherFit',
+    default: 'BrotherFit — Premium Fashion Brand in Bangladesh',
     template: '%s | BrotherFit',
   },
-  description: 'BrotherFit — Premium Fashion Brand.',
+  description:
+    'BrotherFit is Bangladesh\'s premium fashion brand. Shop men\'s clothing — t-shirts, shirts, pants and more. Fast delivery. Cash on delivery available.',
+  keywords: [
+    'BrotherFit', 'fashion Bangladesh', 'men clothing Bangladesh',
+    'online fashion shop', 'premium clothing', 't-shirt Bangladesh',
+    'পোশাক', 'ফ্যাশন বাংলাদেশ',
+  ],
+  authors: [{ name: 'BrotherFit' }],
+  creator: 'BrotherFit',
+  publisher: 'BrotherFit',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/icon-192x192.png',  sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -49,15 +67,43 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
+    url: APP_URL,
     siteName: 'BrotherFit',
+    title: 'BrotherFit — Premium Fashion Brand in Bangladesh',
+    description:
+      'Shop premium men\'s fashion at BrotherFit. Fast delivery across Bangladesh. Cash on delivery available.',
+    images: [
+      {
+        url: `${APP_URL}/logo.png`,
+        width: 874,
+        height: 874,
+        alt: 'BrotherFit — Premium Fashion Brand',
+      },
+    ],
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BrotherFit — Premium Fashion Brand in Bangladesh',
+    description: 'Shop premium men\'s fashion at BrotherFit. Fast delivery across Bangladesh.',
+    images: [`${APP_URL}/logo.png`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // google: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE', // ← পরে add করবে
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
