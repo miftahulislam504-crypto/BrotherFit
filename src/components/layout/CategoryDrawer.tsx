@@ -227,11 +227,14 @@ export default function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
 
         {/* ── Footer brand ── */}
         <div className="px-5 py-4 border-t border-border flex-shrink-0">
-          <p className="text-xs text-muted text-center tracking-wide">
-            <span className="font-bold" style={{ color: '#C89B6D' }}>BROTHER</span>
-            <span className="font-bold text-primary">FIT</span>
-            {' '}· Fashion Brand
-          </p>
+          <div className="flex items-center justify-center gap-2">
+            <img src="/logo.png" alt="BrotherFit" width={20} height={20} className="object-contain" />
+            <p className="text-xs text-muted tracking-wide">
+              <span className="font-bold" style={{ color: '#C89B6D' }}>BROTHER</span>
+              <span className="font-bold text-primary">FIT</span>
+              {' '}· Fashion Brand
+            </p>
+          </div>
         </div>
       </aside>
     </>

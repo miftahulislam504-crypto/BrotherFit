@@ -57,15 +57,8 @@ export default function InstallBanner() {
           style={{ background: '#2C1810' }}
         >
           {/* Logo mark */}
-          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
-              <path d="M50 8 C50 8 58 8 58 16 C58 22 52 24 50 24"
-                stroke="#C89B6D" strokeWidth="7" strokeLinecap="round" fill="none"/>
-              <path d="M50 24 L14 68 C10 72 10 78 14 82 L86 82 C90 78 90 72 86 68 L50 24Z"
-                stroke="#C89B6D" strokeWidth="7" strokeLinejoin="round" fill="none"/>
-              <line x1="22" y1="82" x2="78" y2="82"
-                stroke="#C89B6D" strokeWidth="7" strokeLinecap="round"/>
-            </svg>
+          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
+            <img src="/logo.png" alt="BrotherFit" width={28} height={28} className="object-contain" />
           </div>
 
           {/* Text */}
