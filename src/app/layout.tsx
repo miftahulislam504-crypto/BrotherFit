@@ -99,7 +99,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // google:google8bec4b5f7404e086 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE', // ← পরে add করবে
+    // google:<meta name="google-site-verification" content="8jfw_pf64zoDJ0wmWnpR6h81h0sjaHdFBiW-n3li80A" /> 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE', // ← পরে add করবে
   },
 };
 
