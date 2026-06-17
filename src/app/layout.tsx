@@ -27,8 +27,8 @@ const dmMono = DM_Mono({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  minimumScale: 1,
+  maximumScale: 5,
   viewportFit: 'cover',
 };
 
@@ -53,8 +53,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable}`}
+      style={{ overflowX: 'hidden' }}
     >
-      <body className="bg-bg text-text font-sans antialiased">
+      <body
+        className="bg-bg text-text font-sans antialiased"
+        style={{ overflowX: 'hidden', width: '100%' }}
+      >
         {children}
         <Toaster
           position="bottom-center"

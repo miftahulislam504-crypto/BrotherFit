@@ -21,7 +21,10 @@ export default function SiteLayout({
   headerTransparent = false,
 }: SiteLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen bg-bg">
+    <div
+      className="flex flex-col min-h-screen bg-bg"
+      style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden' }}
+    >
       <Suspense fallback={<HeaderFallback />}>
         <Header transparent={headerTransparent} />
       </Suspense>
@@ -31,6 +34,8 @@ export default function SiteLayout({
         style={{
           paddingTop: 'var(--header-height)',
           paddingBottom: 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px)',
+          width: '100%',
+          overflowX: 'hidden',
         }}
       >
         {children}
