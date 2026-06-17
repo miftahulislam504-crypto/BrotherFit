@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     offers: {
       '@type': 'Offer',
       priceCurrency: 'BDT',
-      price: product.price,
+      price: product.salePrice ?? product.basePrice,
       availability: 'https://schema.org/InStock',
       seller: {
         '@type': 'Organization',
