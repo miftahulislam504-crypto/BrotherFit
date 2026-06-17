@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Cormorant_Garamond, DM_Sans, DM_Mono } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import PWARegister from '@/components/pwa/PWARegister';
+import InstallBanner from '@/components/pwa/InstallBanner';
 import './globals.css';
 
 const cormorant = Cormorant_Garamond({
@@ -30,6 +32,7 @@ export const viewport: Viewport = {
   minimumScale: 1,
   maximumScale: 5,
   viewportFit: 'cover',
+  themeColor: '#2C1810',
 };
 
 export const metadata: Metadata = {
@@ -38,6 +41,12 @@ export const metadata: Metadata = {
     template: '%s | BrotherFit',
   },
   description: 'BrotherFit — Premium Fashion Brand.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'BrotherFit',
+  },
   openGraph: {
     type: 'website',
     siteName: 'BrotherFit',
@@ -55,11 +64,17 @@ export default function RootLayout({
       className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable}`}
       style={{ overflowX: 'hidden' }}
     >
+      <head>
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+      </head>
       <body
         className="bg-bg text-text font-sans antialiased"
         style={{ overflowX: 'hidden', width: '100%' }}
       >
+        <PWARegister />
         {children}
+        <InstallBanner />
         <Toaster
           position="bottom-center"
           toastOptions={{
