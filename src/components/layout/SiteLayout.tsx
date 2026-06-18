@@ -1,10 +1,12 @@
 import { Suspense } from 'react';
 import Header from './Header';
 import BottomNav from './BottomNav';
+import Footer from './Footer';
 
 interface SiteLayoutProps {
   children: React.ReactNode;
   headerTransparent?: boolean;
+  showFooter?: boolean;
 }
 
 function HeaderFallback() {
@@ -19,6 +21,7 @@ function HeaderFallback() {
 export default function SiteLayout({
   children,
   headerTransparent = false,
+  showFooter = true,
 }: SiteLayoutProps) {
   return (
     <div
@@ -30,9 +33,9 @@ export default function SiteLayout({
       </Suspense>
 
       <main
-        className="flex-1 container-app"
+        className="flex-1"
         style={{
-          paddingTop: 'var(--header-height)',
+          paddingTop: headerTransparent ? '0' : 'var(--header-height)',
           paddingBottom: 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px)',
           width: '100%',
           overflowX: 'hidden',
@@ -41,6 +44,7 @@ export default function SiteLayout({
         {children}
       </main>
 
+      {showFooter && <Footer />}
       <BottomNav />
     </div>
   );

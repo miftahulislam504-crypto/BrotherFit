@@ -5,7 +5,7 @@ service firebase.storage {
 
     function isAdmin() {
       return request.auth != null &&
-        firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.isAdmin == true;
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     // Product images — public read, admin write
