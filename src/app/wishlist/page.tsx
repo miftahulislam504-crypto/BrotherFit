@@ -150,6 +150,7 @@ function WishlistCard({
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 390px) 50vw, 200px"
+              unoptimized
             />
           ) : (
             <div className="w-full h-full bg-border" />

@@ -6,11 +6,11 @@ import { Camera, Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateProfile } from 'firebase/auth';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useAuth } from '@/hooks/useAuth';
-import { updateUserProfile } from '@/services/userService';
+import { updateUserProfile, getUserProfile } from '@/services/userService';
 import { profileSchema, type ProfileFormData } from '@/lib/schemas/auth';
-import { auth, storage } from '@/lib/firebase/config';
+import { auth } from '@/lib/firebase/config';
+import { fileToCompressedBase64 } from '@/lib/imageUtils';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { Spinner } from '@/components/ui';
@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 export default function ProfilePage() {
   const { user }             = useAuth();
   const [uploading, setUploading] = useState(false);
-  const [photoURL,  setPhotoURL]  = useState(user?.photoURL ?? '');
+  const [photoURL,  setPhotoURL]  = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -32,13 +32,15 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (user) {
-      reset({
-        name:  user.displayName ?? '',
-        phone: '',
-      });
-      setPhotoURL(user.photoURL ?? '');
-    }
+    if (!user) return;
+    reset({
+      name:  user.displayName ?? '',
+      phone: '',
+    });
+    // Avatar lives in Firestore now (base64), not Firebase Auth's photoURL
+    getUserProfile(user.uid).then(profile => {
+      setPhotoURL(profile?.photoURL ?? '');
+    });
   }, [user, reset]);
 
   /* ── Photo upload ───────────────────────────────────── */
@@ -47,25 +49,24 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate — max 2MB, image only
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('Image must be under 2MB');
+    // Validate — max 5MB source file (it gets compressed down regardless)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5MB');
       return;
     }
 
     setUploading(true);
     try {
-      const storageRef = ref(storage, `users/${user.uid}/avatar`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+      const base64 = await fileToCompressedBase64(file);
 
-      await updateProfile(auth.currentUser!, { photoURL: url });
-      await updateUserProfile(user.uid, { photoURL: url });
+      // Save to Firestore (not Firebase Auth's photoURL — that field
+      // has a 2048-character limit, far too small for a base64 image)
+      await updateUserProfile(user.uid, { photoURL: base64 });
 
-      setPhotoURL(url);
+      setPhotoURL(base64);
       toast.success('Photo updated');
     } catch {
-      toast.error('Failed to upload photo');
+      toast.error('Failed to update photo');
     } finally {
       setUploading(false);
     }
@@ -93,7 +94,7 @@ export default function ProfilePage() {
         <div className="relative">
           <div className="w-20 h-20 rounded-full overflow-hidden bg-border ring-2 ring-border">
             {photoURL ? (
-              <Image src={photoURL} alt="Profile" fill className="object-cover" sizes="80px" />
+              <Image src={photoURL} alt="Profile" fill className="object-cover" sizes="80px" unoptimized />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-primary/10">
                 <span className="font-serif text-2xl text-primary">

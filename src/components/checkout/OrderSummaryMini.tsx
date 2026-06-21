@@ -35,6 +35,7 @@ export default function OrderSummaryMini({
                   fill
                   className="object-cover"
                   sizes="48px"
+                  unoptimized
                 />
               )}
             </div>

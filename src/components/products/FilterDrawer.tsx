@@ -9,10 +9,10 @@ import type { Category } from '@/types';
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
 const PRICE_RANGES = [
-  { label: 'Under $50',    min: 0,   max: 50  },
-  { label: '$50 – $100',   min: 50,  max: 100 },
-  { label: '$100 – $200',  min: 100, max: 200 },
-  { label: 'Over $200',    min: 200, max: Infinity },
+  { label: 'Under ৳1,000',      min: 0,    max: 1000 },
+  { label: '৳1,000 – ৳3,000',   min: 1000, max: 3000 },
+  { label: '৳3,000 – ৳6,000',   min: 3000, max: 6000 },
+  { label: 'Over ৳6,000',       min: 6000, max: Infinity },
 ];
 
 export interface ActiveFilters {

@@ -154,7 +154,7 @@ export default function OrderDetailPage() {
               <Link href={`/product/${item.productId}`} className="flex-shrink-0">
                 <div className="relative w-16 h-20 rounded-xl overflow-hidden bg-bg">
                   {item.productImage && (
-                    <Image src={item.productImage} alt={item.productName} fill className="object-cover" sizes="64px" />
+                    <Image src={item.productImage} alt={item.productName} fill className="object-cover" sizes="64px" unoptimized />
                   )}
                 </div>
               </Link>

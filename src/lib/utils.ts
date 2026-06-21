@@ -6,18 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Format price in USD */
+/** Format price in BDT (Taka) — the only currency used in this app */
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(price);
+  return `৳${Math.round(price).toLocaleString('en-BD')}`;
 }
 
-/** Format price in BDT (Taka) */
+/** Alias kept for any older call sites */
 export function formatBDT(price: number): string {
-  return `৳${price.toLocaleString('en-BD')}`;
+  return formatPrice(price);
 }
 
 /** Discount percentage */

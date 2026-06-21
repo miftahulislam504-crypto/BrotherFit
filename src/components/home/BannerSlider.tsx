@@ -4,8 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import type { Banner } from '@/types';
 
 interface BannerSliderProps {
@@ -13,25 +11,17 @@ interface BannerSliderProps {
 }
 
 export default function BannerSlider({ banners }: BannerSliderProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 28 });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [current, setCurrent] = useState(0);
 
-  // Autoplay — pauses on interaction
+  // Autoplay
   useEffect(() => {
     if (!emblaApi) return;
-    let timer = setInterval(() => emblaApi.scrollNext(), 4500);
-    const reset = () => {
-      clearInterval(timer);
-      timer = setInterval(() => emblaApi.scrollNext(), 4500);
-    };
-    emblaApi.on('pointerDown', reset);
-    return () => {
-      clearInterval(timer);
-      emblaApi.off('pointerDown', reset);
-    };
+    const interval = setInterval(() => emblaApi.scrollNext(), 4000);
+    return () => clearInterval(interval);
   }, [emblaApi]);
 
-  // Sync dot indicator
+  // Track current slide
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrent(emblaApi.selectedScrollSnap());
@@ -60,18 +50,16 @@ export default function BannerSlider({ banners }: BannerSliderProps) {
 
       {/* Dot pagination */}
       {banners.length > 1 && (
-        <div className="flex justify-center items-center gap-1.5 mt-3">
+        <div className="flex justify-center gap-1.5 mt-3">
           {banners.map((_, i) => (
             <button
               key={i}
               onClick={() => emblaApi?.scrollTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={cn(
-                'rounded-full transition-all duration-300',
+              className={`transition-all duration-300 rounded-full ${
                 i === current
                   ? 'w-5 h-1.5 bg-primary'
-                  : 'w-1.5 h-1.5 bg-border hover:bg-accent/50'
-              )}
+                  : 'w-1.5 h-1.5 bg-border'
+              }`}
             />
           ))}
         </div>
@@ -81,105 +69,50 @@ export default function BannerSlider({ banners }: BannerSliderProps) {
 }
 
 function BannerCard({ banner }: { banner: Banner }) {
-  const inner = (
+  const content = (
     <div
-      className="relative h-44 rounded-2xl overflow-hidden flex"
-      style={{ background: 'linear-gradient(135deg, #EDE8E1 0%, #F0EBE3 100%)' }}
+      className="relative h-44 rounded-2xl overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #EDE8E1 0%, #F8F6F2 100%)' }}
     >
-      {/* ── Left: text content ── */}
-      <div className="relative z-10 flex flex-col justify-center px-5 py-5 flex-1 min-w-0">
-        {/* Eyebrow label */}
-        <p className="text-[10px] font-semibold text-accent uppercase tracking-[0.15em] mb-1.5">
+      {banner.image && (
+        <Image
+          src={banner.image}
+          alt={banner.title}
+          fill
+          className="object-cover"
+          priority
+          unoptimized
+        />
+      )}
+
+      {/* Text overlay */}
+      <div className="absolute inset-0 flex flex-col justify-center p-5">
+        <p className="text-xs font-medium text-accent uppercase tracking-widest mb-1">
           New Collection
         </p>
-
-        {/* Title */}
-        <h2
-          className="font-serif leading-tight text-primary"
-          style={{ fontSize: 'clamp(1.1rem, 5vw, 1.4rem)', maxWidth: '10rem' }}
-        >
+        <h2 className="font-serif text-2xl text-primary leading-tight max-w-[180px]">
           {banner.title}
         </h2>
-
-        {/* Subtitle */}
         {banner.subtitle && (
-          <p
-            className="text-muted mt-1 leading-snug"
-            style={{ fontSize: '0.7rem', maxWidth: '9rem' }}
-          >
+          <p className="text-xs text-muted mt-1 max-w-[160px]">
             {banner.subtitle}
           </p>
         )}
-
-        {/* CTA */}
-        <div className="mt-4">
+        <div className="mt-3">
           <span
-            className={cn(
-              'inline-flex items-center gap-1.5 text-xs font-semibold',
-              'bg-primary text-white rounded-full px-4 py-2',
-              'transition-opacity duration-200 hover:opacity-90'
-            )}
+            className="inline-flex items-center gap-1 bg-primary text-white
+                       text-xs font-medium px-4 py-2 rounded-full"
           >
             Shop Now
-            <ArrowRight size={12} strokeWidth={2.5} />
           </span>
         </div>
       </div>
-
-      {/* ── Right: image ── */}
-      {banner.image ? (
-        <div className="relative w-[46%] flex-shrink-0">
-          {/* Soft left-edge fade so image blends into the card */}
-          <div
-            className="absolute inset-y-0 left-0 w-8 z-10 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(to right, #EDE8E1 0%, transparent 100%)',
-            }}
-          />
-          <Image
-            src={banner.image}
-            alt={banner.title}
-            fill
-            className="object-cover object-top"
-            priority
-            sizes="(max-width: 448px) 46vw, 200px"
-          />
-        </div>
-      ) : (
-        /* Placeholder block when no image is set */
-        <div
-          className="w-[46%] flex-shrink-0 flex items-end justify-center pb-4"
-          style={{
-            background: 'linear-gradient(180deg, #EDE8E1 0%, #D6CCBF 100%)',
-          }}
-        >
-          <div
-            className="w-20 h-28 rounded-2xl opacity-30"
-            style={{ background: '#C89B6D' }}
-          />
-        </div>
-      )}
-
-      {/* ── Subtle bottom-left decorative arc ── */}
-      <svg
-        className="absolute bottom-0 left-0 opacity-[0.06] pointer-events-none"
-        width="120"
-        height="80"
-        viewBox="0 0 120 80"
-        fill="none"
-        aria-hidden="true"
-      >
-        <circle cx="0" cy="80" r="100" stroke="#2C1810" strokeWidth="24" />
-      </svg>
     </div>
   );
 
   return banner.link ? (
-    <Link href={banner.link} className="block">
-      {inner}
-    </Link>
+    <Link href={banner.link}>{content}</Link>
   ) : (
-    <div>{inner}</div>
+    <div>{content}</div>
   );
 }

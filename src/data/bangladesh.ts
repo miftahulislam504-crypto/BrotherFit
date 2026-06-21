@@ -157,9 +157,9 @@ export function isDhaka(districtId: string): boolean {
   return districtId === 'dhaka';
 }
 
-/** Delivery charge in USD */
+/** Delivery charge in BDT (Taka) */
 export function getDeliveryFee(districtId: string): number {
-  return isDhaka(districtId) ? 2 : 5;
+  return isDhaka(districtId) ? 60 : 120;
 }
 
 export function getUpazilasForDistrict(districtId: string): string[] {

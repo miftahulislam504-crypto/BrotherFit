@@ -57,7 +57,7 @@ export default function ProductTabs({ description, material, reviews }: ProductT
             <ShippingRow label="Outside Dhaka" value="120 BDT · 4–7 days" />
             <ShippingRow label="Express" value="Available on request" />
             <p className="text-xs text-muted mt-3 pt-3 border-t border-border">
-              Orders placed before 2 PM are dispatched same day. Free shipping on orders over $200.
+              Orders placed before 2 PM are dispatched same day. Free shipping on orders over ৳5,000.
             </p>
           </div>
         )}
