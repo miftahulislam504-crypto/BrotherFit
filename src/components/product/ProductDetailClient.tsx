@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ShoppingBag, Heart, Share2, ChevronDown, ChevronUp } from 'lucide-react';
 import toast from 'react-hot-toast';
-import ProductGallery from './ProductGallery';
 import SizeSelector from './SizeSelector';
 import ColorSelector, { type ColorOption } from './ColorSelector';
 import QuantitySelector from './QuantitySelector';
 import ProductTabs from './ProductTabs';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useCartAnimation } from '@/hooks/useCartAnimation';
 import { formatPrice, discountPercent, cn } from '@/lib/utils';
 import type { Product, ProductVariant, Review, SizeOption } from '@/types';
 
@@ -25,6 +25,8 @@ export default function ProductDetailClient({
   reviews,
 }: ProductDetailClientProps) {
   const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
+  const imageAreaRef = useRef<HTMLDivElement>(null);
+  const { flyToCart, bounceCartIcon } = useCartAnimation();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
@@ -130,7 +132,10 @@ export default function ProductDetailClient({
       quantity,
     });
 
-    toast.success('Added to cart! 🛍️');
+    // Fly-to-cart + bounce animation
+    flyToCart(imageAreaRef.current, product.images[0], () => {
+      toast.success('Added to cart!');
+    });
   };
 
   const handleShare = async () => {
@@ -149,13 +154,8 @@ export default function ProductDetailClient({
 
   return (
     <>
-      {/* ══ IMAGE GALLERY (full-bleed) ══════════════════════ */}
-      <div className="-mx-4">
-        <ProductGallery images={product.images} productName={product.name} />
-      </div>
-
       {/* ══ PRODUCT INFO CARD ════════════════════════════════ */}
-      <div className="mt-4 px-0 space-y-5">
+      <div className="mt-4 px-4 space-y-4">
 
         {/* Category + rating + share row */}
         <div className="flex items-center justify-between">
@@ -190,7 +190,7 @@ export default function ProductDetailClient({
         </div>
 
         {/* Product name */}
-        <h1 className="font-serif text-2xl text-primary leading-tight mt-1">
+        <h1 className="font-serif text-2xl text-primary leading-tight">
           {product.name}
         </h1>
 
@@ -252,7 +252,7 @@ export default function ProductDetailClient({
 
       {/* ══ VARIANT SELECTORS ════════════════════════════════ */}
       {!noVariants && (
-        <div className="mt-5 pt-5 border-t border-border space-y-5">
+        <div className="mt-5 mx-4 pt-5 border-t border-border space-y-5">
           <SizeSelector
             sizes={uniqueSizes}
             availableSizes={availableSizes}
@@ -269,7 +269,7 @@ export default function ProductDetailClient({
       )}
 
       {/* ══ QUANTITY + WISHLIST ROW ══════════════════════════ */}
-      <div className="mt-5 flex items-center gap-4">
+      <div className="mt-5 mx-4 flex items-center gap-4">
         <span className="text-sm font-medium text-text">Quantity</span>
         <QuantitySelector
           value={quantity}
@@ -278,7 +278,7 @@ export default function ProductDetailClient({
           disabled={noVariants ? false : !selectedVariant || isOutOfStock}
         />
 
-        {/* Wishlist button — top-right aligned */}
+        {/* Wishlist button */}
         <button
           onClick={() => toggleWishlist(product.id)}
           className={cn(
@@ -301,49 +301,79 @@ export default function ProductDetailClient({
       </div>
 
       {/* ══ TABS (Description / Material / Shipping / Reviews) ═ */}
-      <ProductTabs
-        description={product.description}
-        material={product.material}
-        reviews={reviews}
-      />
+      <div className="mx-4">
+        <ProductTabs
+          description={product.description}
+          material={product.material}
+          reviews={reviews}
+        />
+      </div>
 
-      {/* ══ STICKY BOTTOM BAR ════════════════════════════════ */}
+      {/* ══ STICKY BOTTOM BAR — redesigned ══════════════════ */}
       <div
-        className="fixed bottom-[var(--bottom-nav-height)] left-0 right-0 z-30
-                   bg-surface/95 backdrop-blur-md border-t border-border shadow-sticky
-                   px-4 py-3"
+        className="fixed bottom-0 left-0 right-0 z-30"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div className="container-app flex items-center gap-3">
+        {/* Bottom nav এর উপরে থাকার জন্য */}
+        <div
+          style={{ marginBottom: 'var(--bottom-nav-height)' }}
+          className="bg-surface/98 backdrop-blur-md border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+        >
+          <div className="px-4 pt-3 pb-3">
+            {/* Top row: label + price */}
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-[11px] text-muted uppercase tracking-widest font-medium">
+                Total Price
+              </span>
+              <span className="font-mono font-bold text-primary text-xl leading-tight">
+                {formatPrice(totalPrice)}
+              </span>
+            </div>
 
-          {/* Total price */}
-          <div className="flex-shrink-0">
-            <p className="text-[10px] text-muted leading-none mb-0.5">Total Price</p>
-            <p className="font-mono font-bold text-primary text-lg leading-tight">
-              {formatPrice(totalPrice)}
-            </p>
+            {/* Bottom row: wishlist icon + Add to Cart button */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => toggleWishlist(product.id)}
+                className={cn(
+                  'flex-shrink-0 w-13 h-13 flex items-center justify-center rounded-2xl',
+                  'border-2 transition-all duration-200',
+                  isWishlisted
+                    ? 'bg-primary/10 border-primary/60'
+                    : 'bg-bg border-border hover:border-primary/40'
+                )}
+                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+              >
+                <Heart
+                  size={20}
+                  className={cn(
+                    'transition-all duration-200',
+                    isWishlisted ? 'fill-primary stroke-primary' : 'stroke-muted'
+                  )}
+                />
+              </button>
+
+              <button
+                onClick={handleAddToCart}
+                disabled={!noVariants && (!selectedVariant || isOutOfStock)}
+                className={cn(
+                  'flex-1 flex items-center justify-center gap-2 rounded-2xl',
+                  'font-semibold text-sm tracking-wide transition-all duration-200',
+                  'h-13',
+                  (!noVariants && (!selectedVariant || isOutOfStock))
+                    ? 'bg-border text-muted cursor-not-allowed'
+                    : 'bg-primary text-white hover:bg-primary-light active:scale-[0.97] shadow-md'
+                )}
+              >
+                <ShoppingBag size={18} />
+                {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+              </button>
+            </div>
           </div>
-
-          {/* Add to Cart button */}
-          <button
-            onClick={handleAddToCart}
-            disabled={!noVariants && (!selectedVariant || isOutOfStock)}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-2 h-13 rounded-2xl',
-              'font-semibold text-sm tracking-wide transition-all duration-200',
-              (!noVariants && (!selectedVariant || isOutOfStock))
-                ? 'bg-border text-muted cursor-not-allowed'
-                : 'bg-primary text-white hover:bg-primary-light active:scale-[0.97] shadow-md'
-            )}
-          >
-            <ShoppingBag size={18} />
-            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-          </button>
-
         </div>
       </div>
 
-      {/* Spacer — sticky bar এর পেছনে content লুকাবে না */}
-      <div className="h-24" />
+      {/* Spacer */}
+      <div className="h-36" />
     </>
   );
 }

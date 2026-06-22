@@ -96,8 +96,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SiteLayout>
-        <ProductGallery images={product.images} productName={product.name} />
+        {/* Gallery — full bleed, header এর ঠিক নিচে */}
+        <div className="w-full overflow-hidden">
+          <ProductGallery images={product.images} productName={product.name} />
+        </div>
+
+        {/* Product info + actions — ProductDetailClient এ gallery নেই */}
         <ProductDetailClient product={product} variants={variants} reviews={reviews} />
+
         <RelatedProducts categoryId={product.categoryId} excludeId={product.id} />
       </SiteLayout>
     </>

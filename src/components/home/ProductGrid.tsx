@@ -1,3 +1,6 @@
+'use client';
+
+import { useRef, useEffect, useState } from 'react';
 import ProductCard from '@/components/product/ProductCard';
 import { Skeleton } from '@/components/ui';
 import type { Product } from '@/types';
@@ -13,11 +16,30 @@ export default function ProductGrid({
   loading = false,
   skeletonCount = 6,
 }: ProductGridProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.unobserve(el);
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   if (loading) {
     return (
       <div className="grid grid-cols-2 gap-3">
         {Array.from({ length: skeletonCount }).map((_, i) => (
-          <div key={i} className="rounded-2xl overflow-hidden">
+          <div key={i} className="rounded-2xl overflow-hidden" style={{ animationDelay: `${i * 60}ms` }}>
             <Skeleton className="aspect-[3/4] w-full rounded-2xl" />
             <div className="p-3 space-y-2">
               <Skeleton className="h-3 w-2/3" />
@@ -39,9 +61,19 @@ export default function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+    <div ref={ref} className="grid grid-cols-2 gap-3">
+      {products.map((product, i) => (
+        <div
+          key={product.id}
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.96)',
+            transition: `opacity 0.55s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)`,
+            transitionDelay: `${i * 65}ms`,
+          }}
+        >
+          <ProductCard product={product} revealDelay={i * 65} />
+        </div>
       ))}
     </div>
   );

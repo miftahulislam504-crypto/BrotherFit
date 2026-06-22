@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CountdownTimer from './CountdownTimer';
 import ProductCard from '@/components/product/ProductCard';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import type { Product, FlashSale } from '@/types';
 
 interface FlashSaleSectionProps {
@@ -27,6 +28,7 @@ type TabLabel = typeof TABS[number]['label'];
 export default function FlashSaleSection({ sale, products }: FlashSaleSectionProps) {
   const [activeTab, setActiveTab] = useState<TabLabel>('All');
   const [expired, setExpired] = useState(false);
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.08 });
 
   // Client-side filter by product tags
   const filtered = useMemo(() => {
@@ -40,7 +42,15 @@ export default function FlashSaleSection({ sale, products }: FlashSaleSectionPro
   if (!products.length || expired) return null;
 
   return (
-    <section className="mt-6">
+    <section
+      ref={ref}
+      className="mt-6"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(24px)',
+        transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+      }}
+    >
       {/* ── Header ── */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">

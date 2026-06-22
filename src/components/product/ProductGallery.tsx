@@ -20,8 +20,8 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
 
   return (
     <div>
-      {/* Main image — full width, no horizontal margin */}
-      <div className="relative -mx-4 aspect-[4/5] bg-bg overflow-hidden">
+      {/* Main image — full width */}
+      <div className="relative w-full aspect-[4/5] bg-bg overflow-hidden">
         <Image
           key={activeIndex}
           src={images[activeIndex]}

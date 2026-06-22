@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans, DM_Mono } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import PWARegister from '@/components/pwa/PWARegister';
 import InstallBanner from '@/components/pwa/InstallBanner';
+import CustomCursor from '@/components/ui/CustomCursor';
 import { APP_URL } from '@/lib/constants';
 import './globals.css';
 
@@ -119,6 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         style={{ overflowX: 'hidden', width: '100%' }}
       >
         <PWARegister />
+        <CustomCursor />
         {children}
         <InstallBanner />
         <Toaster
