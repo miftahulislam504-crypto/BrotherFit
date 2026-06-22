@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { ShoppingBag, Heart, Share2, ChevronDown, ChevronUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SizeSelector from './SizeSelector';
@@ -25,8 +25,7 @@ export default function ProductDetailClient({
   reviews,
 }: ProductDetailClientProps) {
   const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
-  const imageAreaRef = useRef<HTMLDivElement>(null);
-  const { flyToCart, bounceCartIcon } = useCartAnimation();
+  const { bounceCartIcon } = useCartAnimation();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
@@ -132,10 +131,8 @@ export default function ProductDetailClient({
       quantity,
     });
 
-    // Fly-to-cart + bounce animation
-    flyToCart(imageAreaRef.current, product.images[0], () => {
-      toast.success('Added to cart!');
-    });
+    bounceCartIcon();
+    toast.success('Added to cart!');
   };
 
   const handleShare = async () => {
@@ -309,65 +306,40 @@ export default function ProductDetailClient({
         />
       </div>
 
-      {/* ══ STICKY BOTTOM BAR — redesigned ══════════════════ */}
+      {/* ══ STICKY BOTTOM BAR ════════════════════════════════ */}
       <div
         className="fixed bottom-0 left-0 right-0 z-30"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        style={{ marginBottom: 'var(--bottom-nav-height)' }}
       >
-        {/* Bottom nav এর উপরে থাকার জন্য */}
-        <div
-          style={{ marginBottom: 'var(--bottom-nav-height)' }}
-          className="bg-surface/98 backdrop-blur-md border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
-        >
-          <div className="px-4 pt-3 pb-3">
-            {/* Top row: label + price */}
-            <div className="flex items-center justify-between mb-2.5">
-              <span className="text-[11px] text-muted uppercase tracking-widest font-medium">
-                Total Price
-              </span>
-              <span className="font-mono font-bold text-primary text-xl leading-tight">
+        <div className="bg-surface/98 backdrop-blur-md border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          <div className="px-4 py-3 flex items-center gap-3">
+
+            {/* ১/৪ — Price block */}
+            <div className="w-1/4 flex flex-col justify-center">
+              <span className="text-[10px] text-muted leading-none mb-1">Total</span>
+              <span className="font-mono font-bold text-primary text-base leading-tight">
                 {formatPrice(totalPrice)}
               </span>
             </div>
 
-            {/* Bottom row: wishlist icon + Add to Cart button */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => toggleWishlist(product.id)}
-                className={cn(
-                  'flex-shrink-0 w-13 h-13 flex items-center justify-center rounded-2xl',
-                  'border-2 transition-all duration-200',
-                  isWishlisted
-                    ? 'bg-primary/10 border-primary/60'
-                    : 'bg-bg border-border hover:border-primary/40'
-                )}
-                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-              >
-                <Heart
-                  size={20}
-                  className={cn(
-                    'transition-all duration-200',
-                    isWishlisted ? 'fill-primary stroke-primary' : 'stroke-muted'
-                  )}
-                />
-              </button>
+            {/* ৩/৪ — Add to Cart button */}
+            <button
+              onClick={handleAddToCart}
+              disabled={!noVariants && (!selectedVariant || isOutOfStock)}
+              className={cn(
+                'w-3/4 flex items-center justify-center gap-2 rounded-2xl',
+                'font-semibold text-sm tracking-wide transition-all duration-200',
+                'active:scale-[0.97]',
+                (!noVariants && (!selectedVariant || isOutOfStock))
+                  ? 'bg-border text-muted cursor-not-allowed'
+                  : 'bg-primary text-white shadow-md'
+              )}
+              style={{ height: '52px' }}
+            >
+              <ShoppingBag size={18} />
+              {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            </button>
 
-              <button
-                onClick={handleAddToCart}
-                disabled={!noVariants && (!selectedVariant || isOutOfStock)}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-2 rounded-2xl',
-                  'font-semibold text-sm tracking-wide transition-all duration-200',
-                  'h-13',
-                  (!noVariants && (!selectedVariant || isOutOfStock))
-                    ? 'bg-border text-muted cursor-not-allowed'
-                    : 'bg-primary text-white hover:bg-primary-light active:scale-[0.97] shadow-md'
-                )}
-              >
-                <ShoppingBag size={18} />
-                {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-              </button>
-            </div>
           </div>
         </div>
       </div>
