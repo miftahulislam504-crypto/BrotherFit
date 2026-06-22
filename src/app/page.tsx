@@ -112,7 +112,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SiteLayout>
+      <SiteLayout showFooter>
         <BannerSlider banners={banners} />
         <CategoryRow categories={categories} />
 

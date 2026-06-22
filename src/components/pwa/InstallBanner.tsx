@@ -48,7 +48,7 @@ export default function InstallBanner() {
 
   return (
     <div
-      className="fixed bottom-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,0px)+8px)] left-0 right-0 z-40 px-3"
+      className="fixed bottom-[calc(var(--bottom-nav-height)+8px)] left-0 right-0 z-40 px-3"
       style={{ animation: 'slide-up 0.3s ease-out' }}
     >
       <div className="container-app">

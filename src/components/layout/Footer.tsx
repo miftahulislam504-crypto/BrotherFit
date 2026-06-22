@@ -27,7 +27,7 @@ export default function Footer() {
     <footer
       style={{
         background: '#0A0F1F',
-        paddingBottom: 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px)',
+        paddingBottom: 'calc(var(--bottom-nav-height) + 16px)',
       }}
     >
       {/* Top border */}

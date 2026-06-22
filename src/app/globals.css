@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --header-height: 100px;
-    --bottom-nav-height: 64px;
+    --bottom-nav-height: calc(env(safe-area-inset-bottom, 0px) + 80px);
   }
 
   * {

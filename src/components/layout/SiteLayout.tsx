@@ -21,7 +21,7 @@ function HeaderFallback() {
 export default function SiteLayout({
   children,
   headerTransparent = false,
-  showFooter = true,
+  showFooter = false,
 }: SiteLayoutProps) {
   return (
     <div
@@ -36,7 +36,7 @@ export default function SiteLayout({
         className="flex-1"
         style={{
           paddingTop: headerTransparent ? '0' : 'var(--header-height)',
-          paddingBottom: 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px)',
+          paddingBottom: 'calc(var(--bottom-nav-height) + 16px)',
           width: '100%',
           overflowX: 'hidden',
         }}
