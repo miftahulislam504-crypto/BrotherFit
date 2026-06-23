@@ -7,6 +7,7 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 import Link from 'next/link';
+import BottomNav from '@/components/layout/BottomNav';
 import {
   collection, query, where, orderBy, limit,
   getDocs, addDoc, serverTimestamp, Timestamp,
@@ -449,7 +450,7 @@ export default function ClubPage() {
 
   return (
     <div
-      className="min-h-dvh pb-28"
+      className="min-h-dvh pb-24"
       style={{ background: '#F8F6F2' }}
     >
       {/* ── Top header ── */}
@@ -616,6 +617,9 @@ export default function ClubPage() {
           to   { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
       `}</style>
+
+      {/* ── Bottom Nav ── */}
+      <BottomNav />
     </div>
   );
 }

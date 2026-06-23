@@ -80,7 +80,7 @@ function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean })
     <div
       className="relative overflow-hidden"
       style={{
-        height: 'clamp(280px, 88vw, 720px)',
+        height: 'clamp(320px, 120vw, 720px)',
         background: 'linear-gradient(135deg, #EDE8E1 0%, #F8F6F2 100%)',
       }}
     >
