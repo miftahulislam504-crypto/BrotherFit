@@ -124,12 +124,12 @@ export default async function HomePage() {
             <FlashSaleSection sale={flashSale} products={flashSaleProducts} />
           )}
 
-          <section className="mt-6">
+          <section className="mt-8">
             <SectionHeader title="Trending Now" href="/products?sort=popular" />
             <ProductGrid products={trending} />
           </section>
 
-          <section className="mt-6 mb-4">
+          <section className="mt-8 mb-4">
             <SectionHeader title="New Arrivals" href="/products?sort=newest" />
             <ProductGrid products={newArrivals} />
           </section>
