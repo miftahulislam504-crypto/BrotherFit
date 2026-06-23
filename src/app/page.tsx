@@ -113,22 +113,27 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SiteLayout showFooter>
+        {/* Banner — full width, edge to edge */}
         <BannerSlider banners={banners} />
-        <CategoryRow categories={categories} />
 
-        {flashSale && flashSaleProducts.length > 0 && (
-          <FlashSaleSection sale={flashSale} products={flashSaleProducts} />
-        )}
+        {/* Padded content area */}
+        <div className="px-4">
+          <CategoryRow categories={categories} />
 
-        <section className="mt-6">
-          <SectionHeader title="Trending Now" href="/products?sort=popular" />
-          <ProductGrid products={trending} />
-        </section>
+          {flashSale && flashSaleProducts.length > 0 && (
+            <FlashSaleSection sale={flashSale} products={flashSaleProducts} />
+          )}
 
-        <section className="mt-6 mb-4">
-          <SectionHeader title="New Arrivals" href="/products?sort=newest" />
-          <ProductGrid products={newArrivals} />
-        </section>
+          <section className="mt-6">
+            <SectionHeader title="Trending Now" href="/products?sort=popular" />
+            <ProductGrid products={trending} />
+          </section>
+
+          <section className="mt-6 mb-4">
+            <SectionHeader title="New Arrivals" href="/products?sort=newest" />
+            <ProductGrid products={newArrivals} />
+          </section>
+        </div>
       </SiteLayout>
     </>
   );
