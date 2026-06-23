@@ -198,13 +198,13 @@ function AddressDrawer({
         <>
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/40"
+            className="fixed inset-0 z-[60] bg-black/40"
             onClick={onClose}
           />
           <motion.div
             initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-surface rounded-t-3xl max-h-[92vh] overflow-y-auto pb-safe"
+            className="fixed bottom-0 left-0 right-0 z-[70] bg-surface rounded-t-3xl max-h-[92vh] overflow-y-auto pb-safe"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -221,7 +221,7 @@ function AddressDrawer({
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSave)} className="px-5 pt-4 pb-6 space-y-4" noValidate>
+            <form onSubmit={handleSubmit(onSave)} className="px-5 pt-4 pb-[calc(var(--bottom-nav-height)+16px)] space-y-4" noValidate>
               <Input label="Label (e.g. Home, Office)" placeholder="Home" required error={errors.label?.message} {...register('label')} />
               <Input label="Full Name" placeholder="Recipient name" required error={errors.name?.message} {...register('name')} />
               <Input label="Phone" type="tel" placeholder="01XXXXXXXXX" required error={errors.phone?.message} {...register('phone')} />
