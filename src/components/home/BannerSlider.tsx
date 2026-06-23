@@ -38,14 +38,13 @@ export default function BannerSlider({ banners }: BannerSliderProps) {
   return (
     <div
       ref={ref}
-      className="mt-4"
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.97)',
         transition: 'opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)',
       }}
     >
-      <div ref={emblaRef} className="overflow-hidden rounded-2xl">
+      <div ref={emblaRef} className="overflow-hidden">
         <div className="flex touch-pan-y">
           {banners.map((banner, i) => (
             <div key={banner.id} className="flex-none w-full">
@@ -79,9 +78,9 @@ export default function BannerSlider({ banners }: BannerSliderProps) {
 function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean }) {
   const content = (
     <div
-      className="relative rounded-2xl overflow-hidden"
+      className="relative overflow-hidden"
       style={{
-        height: 'clamp(220px, 68vw, 340px)',
+        height: 'clamp(280px, 88vw, 480px)',
         background: 'linear-gradient(135deg, #EDE8E1 0%, #F8F6F2 100%)',
       }}
     >
