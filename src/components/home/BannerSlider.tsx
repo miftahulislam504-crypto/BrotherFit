@@ -80,7 +80,7 @@ function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean })
     <div
       className="relative overflow-hidden"
       style={{
-        height: 'clamp(350px, 130vw, 750px)',
+        height: 'clamp(350px, 126vw, 750px)',
         background: 'linear-gradient(135deg, #EDE8E1 0%, #F8F6F2 100%)',
       }}
     >
@@ -115,7 +115,7 @@ function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean })
       {/* Text content */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 pb-7">
         <p
-          className="text-[11px] font-semibold text-accent uppercase tracking-[0.2em] mb-2"
+          className="text-[12px] font-semibold text-accent uppercase tracking-[0.2em] mb-2"
           style={{
             opacity: isActive ? 1 : 0,
             transform: isActive ? 'translateY(0)' : 'translateY(10px)',
@@ -126,7 +126,7 @@ function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean })
           New Collection
         </p>
         <h2
-          className="font-serif text-[28px] text-white leading-tight max-w-[200px] drop-shadow-md"
+          className="font-serif text-[29px] text-white leading-tight max-w-[200px] drop-shadow-md"
           style={{
             opacity: isActive ? 1 : 0,
             transform: isActive ? 'translateY(0)' : 'translateY(14px)',
@@ -138,7 +138,7 @@ function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean })
         </h2>
         {banner.subtitle && (
           <p
-            className="text-[13px] text-white/75 mt-1.5 max-w-[190px] leading-snug"
+            className="text-[14px] text-white/75 mt-1.5 max-w-[190px] leading-snug"
             style={{
               opacity: isActive ? 1 : 0,
               transform: isActive ? 'translateY(0)' : 'translateY(10px)',
@@ -158,7 +158,7 @@ function BannerCard({ banner, isActive }: { banner: Banner; isActive: boolean })
         >
           <span
             className="inline-flex items-center gap-2 text-primary
-                       text-[13px] font-bold px-5 py-2.5 rounded-full
+                       text-[14px] font-bold px-5 py-2.5 rounded-full
                        hover:scale-105 active:scale-95 transition-transform duration-200"
             style={{
               background: 'rgba(255,255,255,0.95)',
