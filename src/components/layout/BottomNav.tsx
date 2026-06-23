@@ -2,17 +2,17 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, ShoppingBag, Heart, MessageCircle, User } from 'lucide-react';
+import { Home, ShoppingBag, Heart, Trophy, User } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
 const tabs = [
-  { href: '/',         icon: Home,          label: 'Home'     },
-  { href: '/cart',     icon: ShoppingBag,   label: 'Cart'     },
-  { href: '/wishlist', icon: Heart,         label: 'Wishlist' },
-  { href: '/support',  icon: MessageCircle, label: 'Support'  },
-  { href: '/account',  icon: User,          label: 'Account'  },
+  { href: '/',        icon: Home,         label: 'Home'     },
+  { href: '/cart',    icon: ShoppingBag,  label: 'Cart'     },
+  { href: '/wishlist',icon: Heart,        label: 'Wishlist' },
+  { href: '/club',    icon: Trophy,       label: 'Club'     },
+  { href: '/account', icon: User,         label: 'Account'  },
 ];
 
 export default function BottomNav() {
