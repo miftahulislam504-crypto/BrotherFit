@@ -26,6 +26,15 @@ interface CategoryDrawerProps {
 
 const FALLBACK_ICONS = [Shirt, Tag, Package, Star, Flame, Sparkles, LayoutGrid];
 
+// FIX: cat.icon valid emoji কিনা check করার helper
+// Firestore এ icon field এ garbage string থাকলে সেটা দেখাবে না
+function isValidEmoji(str: string): boolean {
+  if (!str || str.length > 8) return false; // emoji max ~4 chars (with skin tone ~8)
+  // emoji Unicode range check — basic emoji ও supplementary symbols
+  const emojiRegex = /^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u;
+  return emojiRegex.test(str);
+}
+
 export default function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
   const pathname       = usePathname();
   const searchParams   = useSearchParams();
@@ -168,7 +177,9 @@ export default function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
                     {cat.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={cat.image} alt={cat.name} className="w-5 h-5 object-contain" />
-                    ) : cat.icon ? (
+                    ) : cat.icon && isValidEmoji(cat.icon) ? (
+                      // FIX: isValidEmoji() দিয়ে check করা হচ্ছে
+                      // আগে যেকোনো string render হত, এখন শুধু valid emoji দেখাবে
                       <span className="text-base leading-none">{cat.icon}</span>
                     ) : (
                       <Icon size={16} />

@@ -17,11 +17,18 @@ export default function ProductGrid({
   skeletonCount = 6,
 }: ProductGridProps) {
   const ref = useRef<HTMLDivElement>(null);
+  // FIX: visible শুরুতে true — products load হলেই দেখাবে
+  // আগে false ছিল, IntersectionObserver products-empty অবস্থায় fire হয়ে
+  // unobserve করে ফেলত, তারপর products আসলে আর trigger হত না → invisible
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // products নেই বা loading → observer দরকার নেই
+    if (!products.length) return;
+
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -29,11 +36,12 @@ export default function ProductGrid({
           obs.unobserve(el);
         }
       },
-      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.05, rootMargin: '100px 0px 0px 0px' }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  // FIX: products dependency যোগ করা — products আসার পরে observer নতুন করে attach হবে
+  }, [products]);
 
   if (loading) {
     return (
