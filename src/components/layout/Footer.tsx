@@ -143,7 +143,7 @@ export default function Footer() {
             © 2026 BrotherFit. All rights reserved.
           </p>
           <p className="text-[10px]" style={{ color: '#334155' }}>
-            🇧🇩 Proudly made in Bangladesh
+             Proudly made in Bangladesh
           </p>
           <div className="flex items-center gap-3 mt-1">
             {['Privacy Policy', 'Terms of Service'].map(item => (
