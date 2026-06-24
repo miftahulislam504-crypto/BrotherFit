@@ -51,14 +51,26 @@ export async function getFeaturedProducts(count = 8): Promise<Product[]> {
 
 export async function getTrendingProducts(count = 6): Promise<Product[]> {
   try {
-    const q = query(collection(db,'products'), where('isActive','==',true), orderBy('salesCount','desc'), limit(count));
+    const q = query(
+      collection(db,'products'),
+      where('isActive','==',true),
+      where('section','==','trending'),
+      orderBy('createdAt','desc'),
+      limit(count),
+    );
     return (await getDocs(q)).docs.map(d => fromDoc<Product>(d));
   } catch { return []; }
 }
 
 export async function getNewArrivals(count = 8): Promise<Product[]> {
   try {
-    const q = query(collection(db,'products'), where('isActive','==',true), orderBy('createdAt','desc'), limit(count));
+    const q = query(
+      collection(db,'products'),
+      where('isActive','==',true),
+      where('section','==','explore'),
+      orderBy('createdAt','desc'),
+      limit(count),
+    );
     return (await getDocs(q)).docs.map(d => fromDoc<Product>(d));
   } catch { return []; }
 }

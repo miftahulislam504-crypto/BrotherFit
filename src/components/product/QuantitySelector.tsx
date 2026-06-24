@@ -16,15 +16,30 @@ export default function QuantitySelector({
   onChange,
   disabled = false,
 }: QuantitySelectorProps) {
+  const handleDecrement = () => {
+    if (disabled || value <= min) return;
+    onChange(Math.max(min, value - 1));
+  };
+
+  const handleIncrement = () => {
+    if (disabled || value >= max) return;
+    onChange(Math.min(max, value + 1));
+  };
+
   return (
     <div className="flex items-center gap-0">
       <button
-        onClick={() => onChange(Math.max(min, value - 1))}
+        type="button"
+        onClick={handleDecrement}
         disabled={disabled || value <= min}
+        aria-label="Decrease quantity"
         className={cn(
           'w-9 h-9 flex items-center justify-center rounded-l-xl border border-border',
-          'transition-colors duration-200',
-          'hover:bg-border/60 disabled:opacity-40 disabled:pointer-events-none'
+          'transition-colors duration-200 select-none',
+          'active:bg-border',
+          disabled || value <= min
+            ? 'opacity-40 pointer-events-none'
+            : 'hover:bg-border/60 cursor-pointer'
         )}
       >
         <Minus size={14} className="text-text" />
@@ -32,18 +47,24 @@ export default function QuantitySelector({
 
       <div
         className="w-12 h-9 flex items-center justify-center
-                   border-t border-b border-border text-sm font-medium text-text"
+                   border-t border-b border-border text-sm font-medium text-text
+                   select-none"
       >
         {value}
       </div>
 
       <button
-        onClick={() => onChange(Math.min(max, value + 1))}
+        type="button"
+        onClick={handleIncrement}
         disabled={disabled || value >= max}
+        aria-label="Increase quantity"
         className={cn(
           'w-9 h-9 flex items-center justify-center rounded-r-xl border border-border',
-          'transition-colors duration-200',
-          'hover:bg-border/60 disabled:opacity-40 disabled:pointer-events-none'
+          'transition-colors duration-200 select-none',
+          'active:bg-border',
+          disabled || value >= max
+            ? 'opacity-40 pointer-events-none'
+            : 'hover:bg-border/60 cursor-pointer'
         )}
       >
         <Plus size={14} className="text-text" />

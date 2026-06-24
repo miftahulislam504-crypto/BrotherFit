@@ -1,5 +1,7 @@
 export type SizeOption = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
 
+export type ProductSection = 'trending' | 'explore';
+
 export interface Product {
   id: string;
   name: string;
@@ -13,6 +15,7 @@ export interface Product {
   description: string;
   material?: string;
   tags: string[];
+  section?: ProductSection;
   isActive: boolean;
   isFeatured: boolean;
   salesCount: number;

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingBag, Heart, Share2, ChevronDown, ChevronUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ShoppingBag, Heart, Share2, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SizeSelector from './SizeSelector';
 import ColorSelector, { type ColorOption } from './ColorSelector';
@@ -24,6 +25,7 @@ export default function ProductDetailClient({
   variants,
   reviews,
 }: ProductDetailClientProps) {
+  const router = useRouter();
   const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
   const { bounceCartIcon } = useCartAnimation();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -59,8 +61,15 @@ export default function ProductDetailClient({
       ? variants.find(v => v.size === selectedSize && v.color === selectedColor)
       : null;
 
-  const maxQty = selectedVariant?.stock ?? 0;
-  const isOutOfStock = selectedVariant ? maxQty === 0 : false;
+  const maxQty = selectedVariant?.stock ?? 99;
+  const isOutOfStock = selectedVariant ? selectedVariant.stock === 0 : false;
+
+  const noVariants = variants.length === 0;
+
+  // quantity কাজ করবে: variant না থাকলে সবসময় enabled, variant থাকলে শুধু selected+inStock হলে enabled
+  const quantityDisabled = noVariants
+    ? false
+    : !selectedVariant || isOutOfStock;
 
   const stockLabel = !selectedVariant
     ? null
@@ -85,8 +94,6 @@ export default function ProductDetailClient({
     ? discountPercent(product.basePrice, product.salePrice!)
     : 0;
   const totalPrice = displayPrice * quantity;
-
-  const noVariants = variants.length === 0;
 
   // ── Handlers ─────────────────────────────────────────────
 
@@ -151,6 +158,23 @@ export default function ProductDetailClient({
 
   return (
     <>
+      {/* ══ FLOATING BACK BUTTON ═════════════════════════════ */}
+      <div className="fixed top-0 left-0 z-50 p-3 pt-safe">
+        <button
+          onClick={() => router.back()}
+          className={cn(
+            'w-10 h-10 flex items-center justify-center',
+            'rounded-full bg-black/30 backdrop-blur-md',
+            'border border-white/20',
+            'transition-all duration-200 active:scale-90',
+            'hover:bg-black/50'
+          )}
+          aria-label="Go back"
+        >
+          <ArrowLeft size={20} className="text-white" strokeWidth={2.2} />
+        </button>
+      </div>
+
       {/* ══ PRODUCT INFO CARD ════════════════════════════════ */}
       <div className="mt-4 px-4 space-y-4">
 
@@ -272,7 +296,7 @@ export default function ProductDetailClient({
           value={quantity}
           max={Math.max(1, maxQty)}
           onChange={setQuantity}
-          disabled={noVariants ? false : !selectedVariant || isOutOfStock}
+          disabled={quantityDisabled}
         />
 
         {/* Wishlist button */}
@@ -306,14 +330,13 @@ export default function ProductDetailClient({
         />
       </div>
 
-      {/* ══ STICKY BOTTOM BAR ════════════════════════════════ */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-30"
-        style={{ marginBottom: 'var(--bottom-nav-height)' }}
-      >
+      {/* ══ STICKY BOTTOM BAR — একদম নিচে, bottom nav নেই ══ */}
+      <div className="fixed bottom-0 left-0 right-0 z-30">
         <div className="bg-surface/98 backdrop-blur-md border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-          <div className="px-4 py-3 flex items-center gap-3">
-
+          <div
+            className="px-4 py-3 flex items-center gap-3"
+            style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}
+          >
             {/* ১/৪ — Price block */}
             <div className="w-1/4 flex flex-col justify-center">
               <span className="text-[10px] text-muted leading-none mb-1">Total</span>
@@ -344,8 +367,8 @@ export default function ProductDetailClient({
         </div>
       </div>
 
-      {/* Spacer */}
-      <div className="h-36" />
+      {/* Spacer — bottom sticky bar এর জন্য, bottom nav নেই তাই কম */}
+      <div className="h-28" />
     </>
   );
 }
