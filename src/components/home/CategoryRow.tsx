@@ -47,7 +47,7 @@ export default function CategoryRow({ categories }: CategoryRowProps) {
         {categories.map((cat, i) => (
           <Link
             key={cat.id}
-            href={`/products?category=${cat.slug}`}
+            href={`/products?category=${cat.id}`}
             className="flex-none flex flex-col items-center gap-2 w-16 group"
             data-cursor="View"
             style={{

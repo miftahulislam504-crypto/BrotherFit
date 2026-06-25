@@ -126,7 +126,7 @@ export default function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
           )}
         >
           <div className={cn(
-            'w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
+            'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors',
             allActive ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
           )}>
             <LayoutGrid size={16} />
@@ -171,12 +171,12 @@ export default function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
                   )}
                 >
                   <div className={cn(
-                    'w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
+                   'w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
                     isActive ? 'bg-accent text-white' : 'bg-accent/10 text-accent'
                   )}>
                     {cat.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={cat.image} alt={cat.name} className="w-5 h-5 object-contain" />
+                      <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
                     ) : cat.icon && isValidEmoji(cat.icon) ? (
                       // FIX: isValidEmoji() দিয়ে check করা হচ্ছে
                       // আগে যেকোনো string render হত, এখন শুধু valid emoji দেখাবে
@@ -208,7 +208,7 @@ export default function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
             )}
           >
             <div className={cn(
-              'w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
+              'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors',
               supportActive ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
             )}>
               <MessageCircle size={16} />
