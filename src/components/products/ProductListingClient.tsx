@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { DocumentSnapshot } from 'firebase/firestore';
-import { SlidersHorizontal, Search } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { getProducts } from '@/services/productService';
 import ProductGrid from '@/components/home/ProductGrid';
 import SortSelect, { SortOption } from './SortSelect';
@@ -80,7 +80,7 @@ export default function ProductListingClient({
   // ── Render ────────────────────────────────────────────────
 
   return (
-    <>
+    <div className="px-4">
       {/* Top bar */}
       <div className="flex items-center justify-between mt-4 mb-4">
         <span className="text-sm text-muted">
@@ -173,7 +173,7 @@ export default function ProductListingClient({
         filters={filters}
         onChange={setFilters}
       />
-    </>
+    </div>
   );
 }
 

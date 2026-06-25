@@ -10,13 +10,16 @@ export default function CustomCursor() {
   const pos    = useRef({ x: 0, y: 0 });
   const ring   = useRef({ x: 0, y: 0 });
   const rafId  = useRef<number>(0);
-  const [label, setLabel] = useState('');
+  const [label, setLabel]     = useState('');
   const [hovered, setHovered] = useState(false);
   const [clicking, setClicking] = useState(false);
+  // Touch device হলে null return করব — না হলে fixed top-0 left-0 এ cursor elements আটকে থাকে
+  const [isTouch, setIsTouch] = useState(true);
 
   useEffect(() => {
-    // Only desktop
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+    const touch = window.matchMedia('(pointer: coarse)').matches;
+    setIsTouch(touch);
+    if (touch) return;
 
     document.body.style.cursor = 'none';
 
@@ -69,6 +72,9 @@ export default function CustomCursor() {
       document.removeEventListener('mouseup', onUp);
     };
   }, []);
+
+  // মোবাইল/touch device → কিছুই render করব না
+  if (isTouch) return null;
 
   return (
     <>
