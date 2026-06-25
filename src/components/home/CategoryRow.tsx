@@ -60,7 +60,7 @@ export default function CategoryRow({ categories }: CategoryRowProps) {
           >
             {/* Circle */}
             <div
-              className="relative w-14 h-14 rounded-full bg-surface border border-border
+              className="relative w-14 h-14 rounded-xl bg-surface border border-border
                          overflow-hidden flex items-center justify-center shadow-soft
                          group-hover:border-accent group-hover:shadow-[0_4px_16px_rgba(200,155,109,0.2)]
                          group-hover:scale-110"
