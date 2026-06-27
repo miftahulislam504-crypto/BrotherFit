@@ -70,6 +70,6 @@ src/
 └── types/        → TypeScript types
 ```
 
-## Related on
+## Related
 
 - **Admin Panel**: `fashionos-admin` (separate repo)
