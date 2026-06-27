@@ -53,11 +53,11 @@ export default function ProductTabs({ description, material, reviews }: ProductT
 
         {active === 'Shipping' && (
           <div className="space-y-3">
-            <ShippingRow label="Dhaka City" value="60 BDT · 2–3 days" />
-            <ShippingRow label="Outside Dhaka" value="120 BDT · 4–7 days" />
+            <ShippingRow label="Sirajganj" value="80 BDT · 2–3 days" />
+            <ShippingRow label="Outside Sirajganj" value="120 BDT · 4–7 days" />
             <ShippingRow label="Express" value="Available on request" />
             <p className="text-xs text-muted mt-3 pt-3 border-t border-border">
-              Orders placed before 2 PM are dispatched same day. Free shipping on orders over ৳5,000.
+              Orders placed before 2 PM are dispatched same day. Free shipping on orders over ৳2,000.
             </p>
           </div>
         )}
